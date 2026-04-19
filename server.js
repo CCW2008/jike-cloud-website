@@ -24,6 +24,12 @@ app.use(session({
 }));
 
 function readDB() {
+  // 确保 data 目录存在
+  if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+    console.log('Created data directory');
+  }
+  
   if (!fs.existsSync(DB_FILE)) {
     const initialDB = {
       admin: { username: 'admin', password: 'admin123' },
@@ -46,6 +52,7 @@ function readDB() {
       }
     };
     fs.writeFileSync(DB_FILE, JSON.stringify(initialDB, null, 2));
+    console.log('Created initial database');
     return initialDB;
   }
   return JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
