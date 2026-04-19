@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>极客云科网络科技工作室 - 专业技术服务提供商</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#0F172A',
+            secondary: '#1E5ECC',
+            tertiary: '#0C3B99',
+            light: '#F8FAFC',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto { content-visibility: auto; }
+      .nav-shadow { box-shadow: 0 2px 20px rgba(0,0,0,0.1); }
+      .section-padding { @apply py-16 md:py-24; }
+      .logo-scale { transition: transform 0.3s ease; }
+      .logo-scale:hover { transform: scale(1.05); }
+      .logo-bg-transparent { background-color: transparent !important; }
+      .blog-card-hover { @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1; }
+      .chat-popup { @apply fixed bottom-6 right-6 z-50 w-80 md:w-96 bg-white rounded-xl shadow-2xl overflow-hidden transform transition-transform duration-300; }
+      .support-badge { @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium; }
+      .support-online { @apply bg-green-100 text-green-800; }
+      .support-offline { @apply bg-gray-100 text-gray-800; }
+      .animate-spin-slow { animation: spin 2s linear infinite; }
+      .fade-in { animation: fadeIn 0.5s ease-in-out; }
+      .scale-in { animation: scaleIn 0.3s ease-out; }
+      .pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.7;
+      }
+    }
+  </style>
+</head>
+<body class="bg-light text-primary antialiased">
+  <header id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300 bg-transparent">
+    <div class="container mx-auto px-4 md:px-6 py-4 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-3 logo-scale">
+        <img src="https://p3-flow-imagex-download-sign.byteimg.com/tos-cn-i-a9rns2rl98/4fe8b4adb196462fab709caf673883ba.png~tplv-a9rns2rl98-24:720:720.png?lk3s=8e244e95&rcl=20260419185949BC52F1D1680F26C977D8&rrcfp=8a172a1a&x-expires=1777201189&x-signature=rMYauqu5Qa92QPGHBhgBdJg2JSM%3D" alt="极客云科网络科技工作室" class="h-10 w-auto md:h-12 logo-bg-transparent">
+        <span class="hidden md:block text-[clamp(1.2rem,2vw,1.5rem)] font-bold text-primary">极客云科</span>
+      </a>
+      <nav class="hidden md:flex items-center gap-8">
+        <a href="/" class="hover:text-secondary transition-colors">首页</a>
+        <a href="/services" class="hover:text-secondary transition-colors">服务</a>
+        <a href="/about" class="hover:text-secondary transition-colors">关于</a>
+        <a href="/cases" class="hover:text-secondary transition-colors">案例</a>
+        <a href="/blog" class="hover:text-secondary transition-colors">博客</a>
+        <a href="/data" class="hover:text-secondary transition-colors">数据中心</a>
+        <a href="/contact" class="bg-secondary text-white px-5 py-2 rounded-full hover:bg-tertiary transition-all">联系我们</a>
+      </nav>
+      <button id="menuBtn" class="md:hidden text-xl text-primary">
+        <i class="fa fa-bars"></i>
+      </button>
+    </div>
+    <div id="mobileMenu" class="md:hidden hidden bg-white nav-shadow absolute w-full">
+      <div class="container mx-auto px-4 py-4 flex flex-col gap-4">
+        <a href="/" class="py-2 hover:text-secondary transition-colors">首页</a>
+        <a href="/services" class="py-2 hover:text-secondary transition-colors">服务</a>
+        <a href="/about" class="py-2 hover:text-secondary transition-colors">关于</a>
+        <a href="/cases" class="py-2 hover:text-secondary transition-colors">案例</a>
+        <a href="/blog" class="py-2 hover:text-secondary transition-colors">博客</a>
+        <a href="/data" class="py-2 hover:text-secondary transition-colors">数据中心</a>
+        <a href="/contact" class="bg-secondary text-white px-5 py-2 rounded-full text-center hover:bg-tertiary">联系我们</a>
+      </div>
+    </div>
+  </header>
+
+  <% if (page === 'home' || page === 'contact') { %>
+  <section id="home" class="min-h-screen flex items-center justify-center pt-20 section-padding">
+    <div class="container mx-auto px-4 md:px-6 text-center">
+      <div class="mb-8 flex justify-center">
+        <img src="https://p3-flow-imagex-download-sign.byteimg.com/tos-cn-i-a9rns2rl98/4fe8b4adb196462fab709caf673883ba.png~tplv-a9rns2rl98-24:720:720.png?lk3s=8e244e95&rcl=20260419185949BC52F1D1680F26C977D8&rrcfp=8a172a1a&x-expires=1777201189&x-signature=rMYauqu5Qa92QPGHBhgBdJg2JSM%3D" alt="极客云科网络科技工作室" class="h-32 md:h-48 w-auto logo-scale logo-bg-transparent">
+      </div>
+      <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold leading-tight mb-6">
+        用<span class="text-secondary">极简技术</span>，创造<span class="text-secondary">极致价值</span>
+      </h1>
+      <p class="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto mb-10">
+        极客云科网络科技工作室 | 专注软件开发、网站建设、技术解决方案，为企业提供高效极简的技术服务
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/services" class="bg-primary text-white px-8 py-3 rounded-full hover:bg-opacity-90 transition-all">查看服务</a>
+        <a href="/contact" class="border-2 border-primary px-8 py-3 rounded-full hover:bg-primary hover:text-white transition-all">立即咨询</a>
+      </div>
+    </div>
+  </section>
+  <% } %>
+
+  <% if (page === 'contact') { %>
+  <section id="contact" class="section-padding bg-white">
+    <div class="container mx-auto px-4 md:px-6 max-w-4xl">
+      <div class="text-center mb-12">
+        <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-4">联系我们</h2>
+        <p class="text-gray-600">有任何问题或需求，请填写下方表单，我们会尽快与您联系</p>
+        <% if (support) { %>
+        <div class="mt-4 flex items-center justify-center gap-2">
+          <span class="support-badge <%= support.online ? 'support-online' : 'support-offline' %>">
+            <i class="fa <%= support.online ? 'fa-circle' : 'fa-circle-o' %> mr-1"></i>
+            <%= support.online ? '客服在线' : '客服离线' %>
+          </span>
+          <span class="text-gray-500 text-sm"><%= support.hours %></span>
+        </div>
+        <% } %>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div>
+          <form id="contactForm" class="bg-gray-50 p-8 rounded-2xl">
+            <div class="mb-6">
+              <label class="block text-gray-700 font-medium mb-2">您的姓名</label>
+              <input type="text" name="name" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary outline-none" placeholder="请输入您的姓名">
+            </div>
+            <div class="mb-6">
+              <label class="block text-gray-700 font-medium mb-2">邮箱地址</label>
+              <input type="email" name="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary outline-none" placeholder="example@email.com">
+            </div>
+            <div class="mb-6">
+              <label class="block text-gray-700 font-medium mb-2">联系电话</label>
+              <input type="tel" name="phone" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary outline-none" placeholder="请输入您的电话">
+            </div>
+            <div class="mb-6">
+              <label class="block text-gray-700 font-medium mb-2">留言内容</label>
+              <textarea name="message" rows="5" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary outline-none resize-none" placeholder="请输入您想说的话..."></textarea>
+            </div>
+            <button type="submit" class="w-full bg-secondary text-white py-3 rounded-lg font-medium hover:bg-tertiary transition-all">提交留言</button>
+            <div id="contactMsg" class="mt-4 text-center hidden"></div>
+          </form>
+        </div>
+        <div class="space-y-8">
+          <div class="bg-gray-50 p-8 rounded-2xl">
+            <h3 class="text-xl font-bold mb-6">客服服务</h3>
+            <% if (support) { %>
+            <div class="space-y-4">
+              <div class="flex items-start gap-4">
+                <div class="text-2xl text-secondary mt-1"><i class="fa fa-phone"></i></div>
+                <div>
+                  <h4 class="font-medium">联系电话</h4>
+                  <p class="text-gray-600"><%= support.phone %></p>
+                </div>
+              </div>
+              <div class="flex items-start gap-4">
+                <div class="text-2xl text-secondary mt-1"><i class="fa fa-envelope"></i></div>
+                <div>
+                  <h4 class="font-medium">邮箱地址</h4>
+                  <p class="text-gray-600"><%= support.email %></p>
+                </div>
+              </div>
+              <div class="flex items-start gap-4">
+                <div class="text-2xl text-secondary mt-1"><i class="fa fa-qq"></i></div>
+                <div>
+                  <h4 class="font-medium">QQ</h4>
+                  <p class="text-gray-600"><%= support.qq %></p>
+                </div>
+              </div>
+              <div class="flex items-start gap-4">
+                <div class="text-2xl text-secondary mt-1"><i class="fa fa-weixin"></i></div>
+                <div>
+                  <h4 class="font-medium">微信</h4>
+                  <p class="text-gray-600"><%= support.wechat %></p>
+                </div>
+              </div>
+              <div class="flex items-start gap-4">
+                <div class="text-2xl text-secondary mt-1"><i class="fa fa-clock-o"></i></div>
+                <div>
+                  <h4 class="font-medium">服务时间</h4>
+                  <p class="text-gray-600"><%= support.hours %></p>
+                </div>
+              </div>
+            </div>
+            <% } %>
+          </div>
+          <div class="bg-gray-50 p-8 rounded-2xl">
+            <h3 class="text-xl font-bold mb-6">常见问题</h3>
+            <% if (support && support.faqs && support.faqs.length > 0) { %>
+            <div class="space-y-4">
+              <% support.faqs.forEach(faq => { %>
+              <div class="border-b border-gray-200 pb-4">
+                <h4 class="font-medium mb-2"><%= faq.question %></h4>
+                <p class="text-gray-600 text-sm"><%= faq.answer %></p>
+              </div>
+              <% }); %>
+            </div>
+            <% } else { %>
+            <p class="text-gray-500 text-center py-4">暂无常见问题</p>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <% } %>
+
+  <% if (page === 'services' || page === 'home') { %>
+  <section id="services" class="bg-gray-50 section-padding">
+    <div class="container mx-auto px-4 md:px-6">
+      <div class="text-center mb-16">
+        <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-4">核心服务</h2>
+        <p class="text-gray-600 max-w-xl mx-auto">专注核心技术，拒绝冗余设计，为你提供高性价比的一站式技术解决方案</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <% if (services && services.length > 0) { %>
+        <% services.forEach(s => { %>
+        <div class="bg-white p-8 rounded-2xl hover:shadow-lg transition-shadow">
+          <div class="text-3xl text-secondary mb-4"><i class="fa <%= s.icon || 'fa-server' %>"></i></div>
+          <h3 class="text-xl font-bold mb-3"><%= s.title %></h3>
+          <p class="text-gray-600"><%= s.description %></p>
+        </div>
+        <% }); %>
+        <% } else { %>
+        <div class="bg-white p-8 rounded-2xl hover:shadow-lg transition-shadow">
+          <div class="text-3xl text-secondary mb-4"><i class="fa fa-globe"></i></div>
+          <h3 class="text-xl font-bold mb-3">网站建设</h3>
+          <p class="text-gray-600">企业官网、品牌网站、响应式网站开发，极简设计，极速加载</p>
+        </div>
+        <div class="bg-white p-8 rounded-2xl hover:shadow-lg transition-shadow">
+          <div class="text-3xl text-secondary mb-4"><i class="fa fa-code"></i></div>
+          <h3 class="text-xl font-bold mb-3">软件开发</h3>
+          <p class="text-gray-600">定制化系统开发、小程序开发、APP开发，高效稳定，极简操作</p>
+        </div>
+        <div class="bg-white p-8 rounded-2xl hover:shadow-lg transition-shadow">
+          <div class="text-3xl text-secondary mb-4"><i class="fa fa-cloud"></i></div>
+          <h3 class="text-xl font-bold mb-3">云服务部署</h3>
+          <p class="text-gray-600">服务器配置、云平台搭建、运维托管，安全可靠，省心省力</p>
+        </div>
+        <% } %>
+      </div>
+    </div>
+  </section>
+  <% } %>
+
+  <% if (page === 'about' || page === 'home') { %>
+  <section id="about" class="section-padding">
+    <div class="container mx-auto px-4 md:px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div class="order-2 lg:order-1">
+          <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-6">关于极客云科</h2>
+          <p class="text-gray-600 mb-6 leading-relaxed">
+            极客云科网络科技工作室，由一群热爱技术、追求极简的极客工程师创立。我们摒弃复杂的流程和冗余的设计，专注于用最简洁的代码、最专业的技术，为中小企业、创业团队提供高性价比的技术服务。
+          </p>
+          <p class="text-gray-600 mb-8 leading-relaxed">
+            我们的理念：<span class="text-secondary font-bold">极简、高效、专业、可靠</span>，用技术赋能业务，用细节成就品质。
+          </p>
+          <div class="flex gap-4">
+            <div class="text-center">
+              <h3 class="text-3xl font-bold text-secondary"><%= statistics?.projects || 50 %>+</h3>
+              <p class="text-gray-600">完成项目</p>
+            </div>
+            <div class="text-center px-6 border-x border-gray-200">
+              <h3 class="text-3xl font-bold text-secondary"><%= statistics?.clients || 30 %>+</h3>
+              <p class="text-gray-600">合作客户</p>
+            </div>
+            <div class="text-center">
+              <h3 class="text-3xl font-bold text-secondary">3年+</h3>
+              <p class="text-gray-600">技术经验</p>
+            </div>
+          </div>
+        </div>
+        <div class="order-1 lg:order-2 h-80 lg:h-96 rounded-2xl flex items-center justify-center bg-white">
+          <img src="https://p3-flow-imagex-download-sign.byteimg.com/tos-cn-i-a9rns2rl98/4fe8b4adb196462fab709caf673883ba.png~tplv-a9rns2rl98-24:720:720.png?lk3s=8e244e95&rcl=20260419185949BC52F1D1680F26C977D8&rrcfp=8a172a1a&x-expires=1777201189&x-signature=rMYauqu5Qa92QPGHBhgBdJg2JSM%3D" alt="极客云科网络科技工作室" class="h-72 w-auto rounded-xl p-4 logo-bg-transparent">
+        </div>
+      </div>
+    </div>
+  </section>
+  <% } %>
+
+  <% if (page === 'cases' || page === 'home') { %>
+  <section id="cases" class="bg-gray-50 section-padding">
+    <div class="container mx-auto px-4 md:px-6">
+      <div class="text-center mb-16">
+        <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-4">经典案例</h2>
+        <p class="text-gray-600 max-w-xl mx-auto">每一个案例，都是我们极简技术的最佳见证</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <% if (cases && cases.length > 0) { %>
+        <% cases.forEach(c => { %>
+        <div class="rounded-2xl overflow-hidden bg-white hover:shadow-xl transition-shadow">
+          <div class="h-52 bg-gray-200 flex items-center justify-center"><span class="text-gray-400">案例图片</span></div>
+          <div class="p-6">
+            <h3 class="text-lg font-bold mb-2"><%= c.title %></h3>
+            <p class="text-gray-600 text-sm"><%= c.description %></p>
+          </div>
+        </div>
+        <% }); %>
+        <% } else { %>
+        <div class="rounded-2xl overflow-hidden bg-white hover:shadow-xl transition-shadow">
+          <div class="h-52 bg-gray-200 flex items-center justify-center"><span class="text-gray-400">案例图片</span></div>
+          <div class="p-6"><h3 class="text-lg font-bold mb-2">企业品牌官网定制</h3><p class="text-gray-600 text-sm">高级简约风格，响应式设计，全端适配</p></div>
+        </div>
+        <div class="rounded-2xl overflow-hidden bg-white hover:shadow-xl transition-shadow">
+          <div class="h-52 bg-gray-200 flex items-center justify-center"><span class="text-gray-400">案例图片</span></div>
+          <div class="p-6"><h3 class="text-lg font-bold mb-2">微信小程序开发</h3><p class="text-gray-600 text-sm">极简交互，高效运行，满足业务核心需求</p></div>
+        </div>
+        <div class="rounded-2xl overflow-hidden bg-white hover:shadow-xl transition-shadow">
+          <div class="h-52 bg-gray-200 flex items-center justify-center"><span class="text-gray-400">案例图片</span></div>
+          <div class="p-6"><h3 class="text-lg font-bold mb-2">管理系统定制开发</h3><p class="text-gray-600 text-sm">功能精简，操作简单，提升办公效率</p></div>
+        </div>
+        <% } %>
+      </div>
+    </div>
+  </section>
+  <% } %>
+
+  <% if (page === 'blog' || page === 'home') { %>
+  <section id="blog" class="section-padding bg-white">
+    <div class="container mx-auto px-4 md:px-6">
+      <div class="text-center mb-16">
+        <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-4">技术博客</h2>
+        <p class="text-gray-600 max-w-xl mx-auto">分享技术干货，探讨行业趋势，让技术更简单</p>
+      </div>
+      <div class="flex flex-wrap justify-center gap-3 md:gap-4 mb-10">
+        <button class="blog-filter-btn bg-secondary text-white px-5 py-2 rounded-full transition-all duration-300 hover:shadow-md">全部</button>
+        <button class="blog-filter-btn bg-gray-100 hover:bg-secondary hover:text-white px-5 py-2 rounded-full transition-all duration-300">前端开发</button>
+        <button class="blog-filter-btn bg-gray-100 hover:bg-secondary hover:text-white px-5 py-2 rounded-full transition-all duration-300">后端开发</button>
+        <button class="blog-filter-btn bg-gray-100 hover:bg-secondary hover:text-white px-5 py-2 rounded-full transition-all duration-300">云服务</button>
+        <button class="blog-filter-btn bg-gray-100 hover:bg-secondary hover:text-white px-5 py-2 rounded-full transition-all duration-300">行业动态</button>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <% if (blogPosts && blogPosts.length > 0) { %>
+        <% blogPosts.forEach(b => { %>
+        <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
+          <div class="relative h-48 overflow-hidden">
+            <% if (b.image) { %>
+            <img src="<%= b.image %>" alt="<%= b.title %>" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+            <% } else { %>
+            <img src="https://picsum.photos/seed/<%= b.id || Math.random() %>/600/400" alt="<%= b.title %>" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+            <% } %>
+            <div class="absolute top-4 left-4">
+              <span class="bg-secondary/90 text-white text-xs px-3 py-1 rounded-full"><%= b.category %></span>
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center text-sm text-gray-500 mb-3">
+              <span class="flex items-center mr-4"><i class="fa fa-calendar-o mr-1"></i> <%= b.date %></span>
+              <span class="flex items-center"><i class="fa fa-eye mr-1"></i> 阅读 128</span>
+            </div>
+            <h3 class="text-xl font-bold mb-3 hover:text-secondary transition-colors group-hover:text-secondary"><%= b.title %></h3>
+            <p class="text-gray-600 mb-4 line-clamp-3"><%= b.description %></p>
+            <a href="#" class="text-secondary font-medium flex items-center hover:underline group-hover:translate-x-1 transition-transform">
+              阅读更多 <i class="fa fa-arrow-right ml-2 text-xs transition-transform group-hover:translate-x-1"></i>
+            </a>
+          </div>
+        </div>
+        <% }); %>
+        <% } else { %>
+        <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
+          <div class="relative h-48 overflow-hidden">
+            <img src="https://picsum.photos/seed/frontend/600/400" alt="Tailwind CSS极简开发实战指南" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+            <div class="absolute top-4 left-4">
+              <span class="bg-secondary/90 text-white text-xs px-3 py-1 rounded-full">前端开发</span>
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center text-sm text-gray-500 mb-3"><span class="flex items-center mr-4"><i class="fa fa-calendar-o mr-1"></i> 2025-01-15</span><span class="flex items-center"><i class="fa fa-eye mr-1"></i> 阅读 156</span></div>
+            <h3 class="text-xl font-bold mb-3 hover:text-secondary transition-colors group-hover:text-secondary">Tailwind CSS极简开发实战指南</h3>
+            <p class="text-gray-600 mb-4 line-clamp-3">本文详细介绍如何使用Tailwind CSS进行极简风格的前端开发，从基础配置到高级技巧，帮助开发者快速上手并构建美观的现代化网站。</p>
+            <a href="#" class="text-secondary font-medium flex items-center hover:underline group-hover:translate-x-1 transition-transform">
+              阅读更多 <i class="fa fa-arrow-right ml-2 text-xs transition-transform group-hover:translate-x-1"></i>
+            </a>
+          </div>
+        </div>
+        <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
+          <div class="relative h-48 overflow-hidden">
+            <img src="https://picsum.photos/seed/cloud/600/400" alt="中小企业云服务器选型指南" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+            <div class="absolute top-4 left-4">
+              <span class="bg-secondary/90 text-white text-xs px-3 py-1 rounded-full">云服务</span>
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center text-sm text-gray-500 mb-3"><span class="flex items-center mr-4"><i class="fa fa-calendar-o mr-1"></i> 2025-01-10</span><span class="flex items-center"><i class="fa fa-eye mr-1"></i> 阅读 98</span></div>
+            <h3 class="text-xl font-bold mb-3 hover:text-secondary transition-colors group-hover:text-secondary">中小企业云服务器选型指南</h3>
+            <p class="text-gray-600 mb-4 line-clamp-3">针对中小企业的实际需求，分析不同云服务器的优缺点，提供详细的选型建议，帮助企业选择最适合自己的云服务方案。</p>
+            <a href="#" class="text-secondary font-medium flex items-center hover:underline group-hover:translate-x-1 transition-transform">
+              阅读更多 <i class="fa fa-arrow-right ml-2 text-xs transition-transform group-hover:translate-x-1"></i>
+            </a>
+          </div>
+        </div>
+        <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
+          <div class="relative h-48 overflow-hidden">
+            <img src="https://picsum.photos/seed/trends/600/400" alt="2025年Web开发趋势预测" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+            <div class="absolute top-4 left-4">
+              <span class="bg-secondary/90 text-white text-xs px-3 py-1 rounded-full">行业动态</span>
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center text-sm text-gray-500 mb-3"><span class="flex items-center mr-4"><i class="fa fa-calendar-o mr-1"></i> 2025-01-05</span><span class="flex items-center"><i class="fa fa-eye mr-1"></i> 阅读 203</span></div>
+            <h3 class="text-xl font-bold mb-3 hover:text-secondary transition-colors group-hover:text-secondary">2025年Web开发趋势预测</h3>
+            <p class="text-gray-600 mb-4 line-clamp-3">结合当前技术发展趋势，预测2025年Web开发的主要方向，包括人工智能、低代码开发、边缘计算等新兴技术的应用前景。</p>
+            <a href="#" class="text-secondary font-medium flex items-center hover:underline group-hover:translate-x-1 transition-transform">
+              阅读更多 <i class="fa fa-arrow-right ml-2 text-xs transition-transform group-hover:translate-x-1"></i>
+            </a>
+          </div>
+        </div>
+        <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
+          <div class="relative h-48 overflow-hidden">
+            <img src="https://picsum.photos/seed/backend/600/400" alt="Node.js性能优化最佳实践" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+            <div class="absolute top-4 left-4">
+              <span class="bg-secondary/90 text-white text-xs px-3 py-1 rounded-full">后端开发</span>
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center text-sm text-gray-500 mb-3"><span class="flex items-center mr-4"><i class="fa fa-calendar-o mr-1"></i> 2024-12-28</span><span class="flex items-center"><i class="fa fa-eye mr-1"></i> 阅读 176</span></div>
+            <h3 class="text-xl font-bold mb-3 hover:text-secondary transition-colors group-hover:text-secondary">Node.js性能优化最佳实践</h3>
+            <p class="text-gray-600 mb-4 line-clamp-3">深入探讨Node.js应用的性能优化策略，包括内存管理、异步编程、缓存策略等方面，帮助开发者构建高性能的后端服务。</p>
+            <a href="#" class="text-secondary font-medium flex items-center hover:underline group-hover:translate-x-1 transition-transform">
+              阅读更多 <i class="fa fa-arrow-right ml-2 text-xs transition-transform group-hover:translate-x-1"></i>
+            </a>
+          </div>
+        </div>
+        <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
+          <div class="relative h-48 overflow-hidden">
+            <img src="https://picsum.photos/seed/ui/600/400" alt="现代UI设计趋势与实践" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+            <div class="absolute top-4 left-4">
+              <span class="bg-secondary/90 text-white text-xs px-3 py-1 rounded-full">前端开发</span>
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center text-sm text-gray-500 mb-3"><span class="flex items-center mr-4"><i class="fa fa-calendar-o mr-1"></i> 2024-12-20</span><span class="flex items-center"><i class="fa fa-eye mr-1"></i> 阅读 142</span></div>
+            <h3 class="text-xl font-bold mb-3 hover:text-secondary transition-colors group-hover:text-secondary">现代UI设计趋势与实践</h3>
+            <p class="text-gray-600 mb-4 line-clamp-3">分析当前流行的UI设计趋势，包括极简主义、深色模式、微交互等，结合实际案例讲解如何在项目中应用这些设计理念。</p>
+            <a href="#" class="text-secondary font-medium flex items-center hover:underline group-hover:translate-x-1 transition-transform">
+              阅读更多 <i class="fa fa-arrow-right ml-2 text-xs transition-transform group-hover:translate-x-1"></i>
+            </a>
+          </div>
+        </div>
+        <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
+          <div class="relative h-48 overflow-hidden">
+            <img src="https://picsum.photos/seed/security/600/400" alt="Web应用安全防护指南" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+            <div class="absolute top-4 left-4">
+              <span class="bg-secondary/90 text-white text-xs px-3 py-1 rounded-full">行业动态</span>
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center text-sm text-gray-500 mb-3"><span class="flex items-center mr-4"><i class="fa fa-calendar-o mr-1"></i> 2024-12-15</span><span class="flex items-center"><i class="fa fa-eye mr-1"></i> 阅读 189</span></div>
+            <h3 class="text-xl font-bold mb-3 hover:text-secondary transition-colors group-hover:text-secondary">Web应用安全防护指南</h3>
+            <p class="text-gray-600 mb-4 line-clamp-3">详细介绍Web应用常见的安全威胁和防护措施，包括SQL注入、XSS攻击、CSRF攻击等，帮助开发者构建更加安全的Web应用。</p>
+            <a href="#" class="text-secondary font-medium flex items-center hover:underline group-hover:translate-x-1 transition-transform">
+              阅读更多 <i class="fa fa-arrow-right ml-2 text-xs transition-transform group-hover:translate-x-1"></i>
+            </a>
+          </div>
+        </div>
+        <% } %>
+      </div>
+      <div class="text-center mt-12">
+        <button id="loadMoreBlogs" class="border-2 border-secondary text-secondary px-8 py-3 rounded-full hover:bg-secondary hover:text-white transition-all duration-300 flex items-center mx-auto gap-2 hover:shadow-md">
+          <span>加载更多博客</span>
+          <i class="fa fa-refresh animate-spin-slow"></i>
+        </button>
+      </div>
+    </div>
+  </section>
+  <% } %>
+
+  <% if (page === 'data' || page === 'home') { %>
+  <section id="data" class="section-padding bg-gray-50">
+    <div class="container mx-auto px-4 md:px-6">
+      <div class="text-center mb-16">
+        <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-4">数据中心</h2>
+        <p class="text-gray-600 max-w-xl mx-auto">可视化展示我们的业务数据和技术指标</p>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        <div class="bg-white p-6 rounded-2xl shadow-sm">
+          <h3 class="text-xl font-bold mb-6">项目完成趋势</h3>
+          <div class="h-80"><canvas id="projectChart"></canvas></div>
+        </div>
+        <div class="bg-white p-6 rounded-2xl shadow-sm">
+          <h3 class="text-xl font-bold mb-6">服务类型分布</h3>
+          <div class="h-80"><canvas id="serviceChart"></canvas></div>
+        </div>
+        <div class="lg:col-span-2 grid grid-cols-2 md:grid-cols-4 gap-6 mt-8">
+          <div class="bg-white p-6 rounded-2xl text-center shadow-sm">
+            <div class="text-4xl font-bold text-secondary mb-2 counter"><%= statistics?.projects || 68 %></div>
+            <p class="text-gray-600">已完成项目</p>
+            <div class="text-xs text-green-500 mt-1"><i class="fa fa-arrow-up"></i> 12% 环比增长</div>
+          </div>
+          <div class="bg-white p-6 rounded-2xl text-center shadow-sm">
+            <div class="text-4xl font-bold text-secondary mb-2 counter"><%= statistics?.clients || 42 %></div>
+            <p class="text-gray-600">合作客户</p>
+            <div class="text-xs text-green-500 mt-1"><i class="fa fa-arrow-up"></i> 8% 环比增长</div>
+          </div>
+          <div class="bg-white p-6 rounded-2xl text-center shadow-sm">
+            <div class="text-4xl font-bold text-secondary mb-2 counter"><%= statistics?.uptime || 99.8 %>%</div>
+            <p class="text-gray-600">系统稳定性</p>
+            <div class="text-xs text-green-500 mt-1"><i class="fa fa-arrow-up"></i> 0.2% 环比增长</div>
+          </div>
+          <div class="bg-white p-6 rounded-2xl text-center shadow-sm">
+            <div class="text-4xl font-bold text-secondary mb-2 counter"><%= statistics?.satisfaction || 100 %>%</div>
+            <p class="text-gray-600">客户满意度</p>
+            <div class="text-xs text-green-500 mt-1"><i class="fa fa-arrow-up"></i> 5% 环比增长</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <% } %>
+
+  <% if (page !== 'contact') { %>
+  <section id="contact" class="section-padding">
+    <div class="container mx-auto px-4 md:px-6 max-w-4xl">
+      <div class="text-center mb-12">
+        <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-4">联系我们</h2>
+        <p class="text-gray-600">有任何问题或需求，请填写下方表单，我们会尽快与您联系</p>
+        <% if (support) { %>
+        <div class="mt-4 flex items-center justify-center gap-2">
+          <span class="support-badge <%= support.online ? 'support-online' : 'support-offline' %>">
+            <i class="fa <%= support.online ? 'fa-circle' : 'fa-circle-o' %> mr-1"></i>
+            <%= support.online ? '客服在线' : '客服离线' %>
+          </span>
+          <span class="text-gray-500 text-sm"><%= support.hours %></span>
+        </div>
+        <% } %>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div>
+          <form id="contactForm" class="bg-gray-50 p-8 rounded-2xl">
+            <div class="mb-6">
+              <label class="block text-gray-700 font-medium mb-2">您的姓名</label>
+              <input type="text" name="name" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary outline-none" placeholder="请输入您的姓名">
+            </div>
+            <div class="mb-6">
+              <label class="block text-gray-700 font-medium mb-2">邮箱地址</label>
+              <input type="email" name="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary outline-none" placeholder="example@email.com">
+            </div>
+            <div class="mb-6">
+              <label class="block text-gray-700 font-medium mb-2">联系电话</label>
+              <input type="tel" name="phone" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary outline-none" placeholder="请输入您的电话">
+            </div>
+            <div class="mb-6">
+              <label class="block text-gray-700 font-medium mb-2">留言内容</label>
+              <textarea name="message" rows="5" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary outline-none resize-none" placeholder="请输入您想说的话..."></textarea>
+            </div>
+            <button type="submit" class="w-full bg-secondary text-white py-3 rounded-lg font-medium hover:bg-tertiary transition-all">提交留言</button>
+            <div id="contactMsg" class="mt-4 text-center hidden"></div>
+          </form>
+        </div>
+        <div class="bg-gray-50 p-8 rounded-2xl">
+          <h3 class="text-xl font-bold mb-6">客服服务</h3>
+          <% if (support) { %>
+          <div class="space-y-4">
+            <div class="flex items-start gap-4">
+              <div class="text-2xl text-secondary mt-1"><i class="fa fa-phone"></i></div>
+              <div>
+                <h4 class="font-medium">联系电话</h4>
+                <p class="text-gray-600"><%= support.phone %></p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="text-2xl text-secondary mt-1"><i class="fa fa-envelope"></i></div>
+              <div>
+                <h4 class="font-medium">邮箱地址</h4>
+                <p class="text-gray-600"><%= support.email %></p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="text-2xl text-secondary mt-1"><i class="fa fa-qq"></i></div>
+              <div>
+                <h4 class="font-medium">QQ</h4>
+                <p class="text-gray-600"><%= support.qq %></p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="text-2xl text-secondary mt-1"><i class="fa fa-weixin"></i></div>
+              <div>
+                <h4 class="font-medium">微信</h4>
+                <p class="text-gray-600"><%= support.wechat %></p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="text-2xl text-secondary mt-1"><i class="fa fa-clock-o"></i></div>
+              <div>
+                <h4 class="font-medium">服务时间</h4>
+                <p class="text-gray-600"><%= support.hours %></p>
+              </div>
+            </div>
+          </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </section>
+  <% } %>
+
+  <footer class="bg-primary text-white py-12">
+    <div class="container mx-auto px-4 md:px-6">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <div class="flex items-center gap-3 mb-4">
+            <img src="https://p3-flow-imagex-download-sign.byteimg.com/tos-cn-i-a9rns2rl98/4fe8b4adb196462fab709caf673883ba.png~tplv-a9rns2rl98-24:720:720.png?lk3s=8e244e95&rcl=20260419185949BC52F1D1680F26C977D8&rrcfp=8a172a1a&x-expires=1777201189&x-signature=rMYauqu5Qa92QPGHBhgBdJg2JSM%3D" alt="极客云科" class="h-10 w-auto logo-bg-transparent">
+            <span class="text-xl font-bold">极客云科</span>
+          </div>
+          <p class="text-gray-400">专注极简技术，创造极致价值</p>
+        </div>
+        <div>
+          <h4 class="font-bold mb-4">快速链接</h4>
+          <ul class="space-y-2 text-gray-400">
+            <li><a href="/" class="hover:text-white">首页</a></li>
+            <li><a href="/services" class="hover:text-white">服务</a></li>
+            <li><a href="/about" class="hover:text-white">关于</a></li>
+            <li><a href="/contact" class="hover:text-white">联系</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold mb-4">服务项目</h4>
+          <ul class="space-y-2 text-gray-400">
+            <li>网站建设</li>
+            <li>软件开发</li>
+            <li>云服务部署</li>
+            <li>技术支持</li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold mb-4">联系我们</h4>
+          <ul class="space-y-2 text-gray-400">
+            <li><i class="fa fa-envelope mr-2"></i> contact@jikecloud.com</li>
+            <li><i class="fa fa-phone mr-2"></i> 400-123-4567</li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+        <p>&copy; 2024 极客云科网络科技工作室. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <div id="chatPopup" class="chat-popup translate-y-full">
+    <div class="bg-secondary text-white p-4 flex justify-between items-center">
+      <h3 class="font-bold flex items-center">
+        <i class="fa fa-comments mr-2"></i>
+        在线客服
+        <% if (support && support.online) { %>
+        <span class="ml-2 support-badge support-online">
+          <i class="fa fa-circle mr-1"></i>在线
+        </span>
+        <% } else { %>
+        <span class="ml-2 support-badge support-offline">
+          <i class="fa fa-circle-o mr-1"></i>离线
+        </span>
+        <% } %>
+      </h3>
+      <button id="closeChat" class="text-white hover:text-gray-200">
+        <i class="fa fa-times"></i>
+      </button>
+    </div>
+    <div class="p-4 h-80 overflow-y-auto bg-gray-50" id="chatMessages">
+      <div class="flex justify-center mb-4">
+        <span class="text-xs text-gray-500 bg-gray-200 px-2 py-1 rounded-full">今天</span>
+      </div>
+      <div class="flex mb-4">
+        <div class="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-white mr-2 flex-shrink-0">
+          <i class="fa fa-headphones"></i>
+        </div>
+        <div class="max-w-[80%] bg-white p-3 rounded-lg shadow-sm">
+          <p>您好！欢迎咨询极客云科，有什么可以帮助您的？</p>
+        </div>
+      </div>
+    </div>
+    <div class="p-4 border-t">
+      <form id="chatForm" class="flex gap-2">
+        <input type="text" id="chatInput" placeholder="输入您的问题..." class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary outline-none">
+        <button type="submit" class="bg-secondary text-white px-4 py-2 rounded-lg hover:bg-tertiary">
+          <i class="fa fa-paper-plane"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <button id="chatButton" class="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-secondary text-white flex items-center justify-center shadow-lg hover:bg-tertiary transition-all z-40">
+    <i class="fa fa-comments text-xl"></i>
+  </button>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const chatButton = document.getElementById('chatButton');
+      const chatPopup = document.getElementById('chatPopup');
+      const closeChat = document.getElementById('closeChat');
+      const chatForm = document.getElementById('chatForm');
+      const chatInput = document.getElementById('chatInput');
+      const chatMessages = document.getElementById('chatMessages');
+
+      chatButton.addEventListener('click', function() {
+        chatPopup.classList.toggle('translate-y-full');
+      });
+
+      closeChat.addEventListener('click', function() {
+        chatPopup.classList.add('translate-y-full');
+      });
+
+      chatForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const message = chatInput.value.trim();
+        if (message) {
+          addMessage('user', message);
+          chatInput.value = '';
+          setTimeout(() => {
+            addMessage('bot', '感谢您的咨询，我们会尽快回复您！');
+          }, 1000);
+        }
+      });
+
+      function addMessage(type, text) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `flex mb-4 ${type === 'user' ? 'justify-end' : ''}`;
+        
+        if (type === 'user') {
+          messageDiv.innerHTML = `
+            <div class="max-w-[80%] bg-secondary text-white p-3 rounded-lg shadow-sm">
+              <p>${text}</p>
+            </div>
+            <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 ml-2 flex-shrink-0">
+              <i class="fa fa-user"></i>
+            </div>
+          `;
+        } else {
+          messageDiv.innerHTML = `
+            <div class="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-white mr-2 flex-shrink-0">
+              <i class="fa fa-headphones"></i>
+            </div>
+            <div class="max-w-[80%] bg-white p-3 rounded-lg shadow-sm">
+              <p>${text}</p>
+            </div>
+          `;
+        }
+        
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+
+      const menuBtn = document.getElementById('menuBtn');
+      const mobileMenu = document.getElementById('mobileMenu');
+
+      if (menuBtn && mobileMenu) {
+        menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+      }
+
+      const contactForm = document.getElementById('contactForm');
+      if (contactForm) {
+        contactForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const formData = new FormData(contactForm);
+          const data = Object.fromEntries(formData);
+          const msgDiv = document.getElementById('contactMsg');
+          try {
+            const res = await fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+            const result = await res.json();
+            msgDiv.classList.remove('hidden', 'text-red-500');
+            msgDiv.classList.add('text-green-500');
+            msgDiv.textContent = result.message;
+            contactForm.reset();
+          } catch (err) {
+            msgDiv.classList.remove('hidden', 'text-green-500');
+            msgDiv.classList.add('text-red-500');
+            msgDiv.textContent = '提交失败，请稍后重试';
+          }
+        });
+      }
+
+      if (document.getElementById('projectChart')) {
+        new Chart(document.getElementById('projectChart'), {
+          type: 'line',
+          data: {
+            labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
+            datasets: [{ label: '完成项目数', data: [12, 15, 18, 22, 28, 35], borderColor: '#1E5ECC', tension: 0.4, fill: true, backgroundColor: 'rgba(30,94,204,0.1)' }]
+          },
+          options: { responsive: true, maintainAspectRatio: false }
+        });
+      }
+
+      if (document.getElementById('serviceChart')) {
+        new Chart(document.getElementById('serviceChart'), {
+          type: 'doughnut',
+          data: {
+            labels: ['网站建设', '软件开发', '云服务', 'UI设计'],
+            datasets: [{ data: [35, 30, 20, 15], backgroundColor: ['#1E5ECC', '#0C3B99', '#3B82F6', '#60A5FA'] }]
+          },
+          options: { responsive: true, maintainAspectRatio: false }
+        });
+      }
+
+      window.addEventListener('scroll', () => {
+        const navbar = document.getElementById('navbar');
+        if (window.scrollY > 50) {
+          navbar.classList.add('bg-white', 'nav-shadow');
+          navbar.classList.remove('bg-transparent');
+        } else {
+          navbar.classList.remove('bg-white', 'nav-shadow');
+          navbar.classList.add('bg-transparent');
+        }
+      });
+
+      // 博客功能
+      const blogFilterBtns = document.querySelectorAll('.blog-filter-btn');
+      const loadMoreBtn = document.getElementById('loadMoreBlogs');
+      const blogContainer = document.querySelector('#blog .grid');
+
+      if (blogFilterBtns.length > 0) {
+        blogFilterBtns.forEach(btn => {
+          btn.addEventListener('click', function() {
+            // 更新按钮状态
+            blogFilterBtns.forEach(b => {
+              b.classList.remove('bg-secondary', 'text-white');
+              b.classList.add('bg-gray-100', 'hover:bg-secondary', 'hover:text-white');
+            });
+            this.classList.remove('bg-gray-100', 'hover:bg-secondary', 'hover:text-white');
+            this.classList.add('bg-secondary', 'text-white');
+
+            // 模拟分类筛选
+            const category = this.textContent.trim();
+            console.log('筛选分类:', category);
+            
+            // 这里可以添加实际的筛选逻辑
+            // 例如：过滤博客卡片，显示符合分类的内容
+          });
+        });
+      }
+
+      if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', function() {
+          // 显示加载状态
+          this.innerHTML = '<span>加载中...</span><i class="fa fa-spinner fa-spin ml-2"></i>';
+          this.disabled = true;
+
+          // 模拟加载延迟
+          setTimeout(() => {
+            // 这里可以添加实际的加载更多逻辑
+            // 例如：从服务器获取更多博客数据并添加到页面
+            
+            // 恢复按钮状态
+            this.innerHTML = '<span>加载更多博客</span><i class="fa fa-refresh ml-2"></i>';
+            this.disabled = false;
+            
+            // 显示提示
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg fade-in';
+            notification.textContent = '已加载全部博客';
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+              notification.remove();
+            }, 3000);
+          }, 1500);
+        });
+      }
+
+      // 为博客卡片添加进入动画
+      if (blogContainer) {
+        const blogCards = blogContainer.querySelectorAll('[class*="group"]');
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('scale-in');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.1 });
+
+        blogCards.forEach(card => {
+          observer.observe(card);
+        });
+      }
+    });
+  </script>
+</body>
+</html>
