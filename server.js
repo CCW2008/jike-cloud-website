@@ -316,7 +316,7 @@ app.use((err, req, res, next) => {
   res.status(500).send('Internal Server Error');
 });
 
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, () => {
   console.log(`极客云科网站已启动: http://localhost:${PORT}`);
   console.log(`后台管理: http://localhost:${PORT}/admin/login`);
   console.log(`默认管理员账号: admin / admin123`);
