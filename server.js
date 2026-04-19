@@ -301,12 +301,25 @@ app.post('/admin/api/support/faq', isAuthenticated, (req, res) => {
   } else if (action === 'delete') {
     db.support.faqs = db.support.faqs.filter(f => f.id != id);
   }
-  writeDB(db);
-  res.json({ success: true });
+  function writeDB(data) {
+  // 确保 data 目录存在
+  if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+    console.log('Created data directory in writeDB');
+  }
+  fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
+}
+
+// 全局错误处理
+app.use((err, req, res, next) => {
+  console.error('Server Error:', err);
+  res.status(500).send('Internal Server Error');
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`极客云科网站已启动: http://localhost:${PORT}`);
   console.log(`后台管理: http://localhost:${PORT}/admin/login`);
   console.log(`默认管理员账号: admin / admin123`);
+  console.log(`Data directory: ${DATA_DIR}`);
+  console.log(`Database file: ${DB_FILE}`);
 });
